@@ -177,28 +177,9 @@ export default function AuthPage({ onBack }) {
             />
             {mode !== "forgot" && (
               <>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    justifyContent: "space-between",
-                    marginBottom: 6,
-                  }}
-                >
-                  <label style={{ fontSize: 13, fontWeight: 500, color: T.text }}>
-                    Senha
-                  </label>
-                  {mode === "login" && (
-                    <button
-                      type="button"
-                      onClick={() => goToMode("forgot")}
-                      className="gp-link"
-                      style={{ fontSize: 12 }}
-                    >
-                      Esqueceu a senha?
-                    </button>
-                  )}
-                </div>
+                <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: T.text, marginBottom: 6 }}>
+                  Senha
+                </label>
                 <input
                   type="password"
                   value={password}
@@ -273,6 +254,18 @@ export default function AuthPage({ onBack }) {
                 <button onClick={switchMode} className="gp-link" style={{ fontSize: 13 }}>
                   {mode === "login" ? "Criar conta" : "Entrar"}
                 </button>
+                {mode === "login" && (
+                  <div style={{ marginTop: 8 }}>
+                    <button
+                      type="button"
+                      onClick={() => goToMode("forgot")}
+                      className="gp-link"
+                      style={{ fontSize: 13 }}
+                    >
+                      Esqueceu a senha?
+                    </button>
+                  </div>
+                )}
               </>
             )}
           </div>
