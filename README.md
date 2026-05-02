@@ -45,6 +45,34 @@ VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_ANON_KEY=...
 ```
 
+## IA de dúvidas (opcional)
+
+Cada módulo termina com um chat "Pergunte à IA" focado **só no conteúdo do módulo**. A integração usa Claude Haiku 4.5 via uma Edge Function do Supabase — a chave da Anthropic nunca fica exposta no front.
+
+### Deploy da Edge Function
+
+1. Instale a [Supabase CLI](https://supabase.com/docs/guides/cli/getting-started).
+2. Faça login e linke o projeto:
+
+```bash
+supabase login
+supabase link --project-ref your-project-ref
+```
+
+3. Configure a chave da Anthropic como secret (não vai pro repositório):
+
+```bash
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+```
+
+4. Deploy:
+
+```bash
+supabase functions deploy ask-ai
+```
+
+A função fica em `supabase/functions/ask-ai/index.ts`. Ela aplica um system prompt diferente por módulo — perguntas fora do escopo são redirecionadas pela própria IA. Sem a Edge Function deployada, o chat mostra um aviso de erro, mas o resto do guia continua funcionando.
+
 ## Scripts
 
 - `npm run dev` — servidor de desenvolvimento.
