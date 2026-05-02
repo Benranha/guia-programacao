@@ -44,28 +44,30 @@ function Nt({e,t,bg,tc}){
 }
 function Cd({lang,code,mob}){
   return (
-    <div style={{background:C.codeBg,borderRadius:12,padding:mob?"0.9rem 1rem":"1.25rem 1.5rem",margin:"1rem 0",overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+    <div style={{background:C.codeBg,borderRadius:12,padding:mob?"0.85rem 0.95rem":"1.25rem 1.5rem",margin:"1rem 0",overflowX:mob?"hidden":"auto",WebkitOverflowScrolling:"touch"}}>
       {lang && <div style={{fontSize:10,color:"#6B6660",fontFamily:mono,marginBottom:8,textTransform:"uppercase",letterSpacing:"0.12em"}}>{lang}</div>}
-      <pre style={{margin:0,fontFamily:mono,fontSize:mob?12:13,lineHeight:1.7,color:C.codeText,whiteSpace:"pre"}}>{code}</pre>
+      <pre style={{margin:0,fontFamily:mono,fontSize:mob?11:13,lineHeight:1.7,color:C.codeText,whiteSpace:mob?"pre-wrap":"pre",wordBreak:mob?"break-word":"normal",overflowWrap:mob?"anywhere":"normal"}}>{code}</pre>
     </div>
   );
 }
-function Tb({h,r,ac}){
+function Tb({h,r,ac,mob}){
+  const cellPad=mob?"6px 7px":"9px 14px";
+  const cellStyle={padding:cellPad,borderBottom:`1px solid ${C.border}`,lineHeight:1.4,wordBreak:"break-word",overflowWrap:"anywhere"};
   return (
-    <div style={{overflowX:"auto",margin:"1rem 0",borderRadius:10,overflow:"hidden",border:`1px solid ${C.border}`}}>
-      <table style={{width:"100%",borderCollapse:"collapse",fontSize:14,fontFamily:sans}}>
-        <thead><tr>{h.map((x,i)=> <th key={i} style={{background:i===0?C.cream:ac||C.terra,color:i===0?C.muted:C.white,padding:"9px 14px",textAlign:"left",fontWeight:500,fontSize:13}}>{x}</th>)}</tr></thead>
-        <tbody>{r.map((row,i)=> <tr key={i} style={{background:i%2===0?C.white:C.cream}}>{row.map((cell,j)=> <td key={j} style={{padding:"9px 14px",borderBottom:`1px solid ${C.border}`,color:j===0?C.muted:C.ink,fontWeight:j===0?500:400,lineHeight:1.5}}>{cell}</td>)}</tr>)}</tbody>
+    <div style={{margin:"1rem 0",borderRadius:10,overflow:"hidden",border:`1px solid ${C.border}`}}>
+      <table style={{width:"100%",borderCollapse:"collapse",fontSize:mob?11:14,fontFamily:sans,tableLayout:"fixed"}}>
+        <thead><tr>{h.map((x,i)=> <th key={i} style={{background:i===0?C.cream:ac||C.terra,color:i===0?C.muted:C.white,padding:cellPad,textAlign:"left",fontWeight:500,fontSize:mob?11:13,wordBreak:"break-word",overflowWrap:"anywhere"}}>{x}</th>)}</tr></thead>
+        <tbody>{r.map((row,i)=> <tr key={i} style={{background:i%2===0?C.white:C.cream}}>{row.map((cell,j)=> <td key={j} style={{...cellStyle,color:j===0?C.muted:C.ink,fontWeight:j===0?500:400}}>{cell}</td>)}</tr>)}</tbody>
       </table>
     </div>
   );
 }
-function Qt({q,a,r,ac}){
+function Qt({q,a,r,ac,mob}){
   return (
-    <div style={{background:C.ink,borderRadius:16,padding:"1.875rem",margin:"1rem 0"}}>
-      <div style={{fontSize:52,lineHeight:0.9,color:ac||C.terra,fontFamily:serif,marginBottom:12,userSelect:"none"}}>&ldquo;</div>
-      <p style={{fontSize:17,lineHeight:1.72,margin:"0 0 1rem",fontFamily:serif,fontStyle:"italic",color:"#F0EBE3"}}>{q}</p>
-      <div style={{fontWeight:600,fontSize:14,color:C.white,fontFamily:sans}}>{a}</div>
+    <div style={{background:C.ink,borderRadius:16,padding:mob?"1.25rem 1.1rem":"1.875rem",margin:"1rem 0"}}>
+      <div style={{fontSize:mob?40:52,lineHeight:0.9,color:ac||C.terra,fontFamily:serif,marginBottom:8,userSelect:"none"}}>&ldquo;</div>
+      <p style={{fontSize:mob?15:17,lineHeight:1.65,margin:"0 0 0.875rem",fontFamily:serif,fontStyle:"italic",color:"#F0EBE3",overflowWrap:"anywhere"}}>{q}</p>
+      <div style={{fontWeight:600,fontSize:mob?13:14,color:C.white,fontFamily:sans}}>{a}</div>
       <div style={{fontSize:12,color:"#8A8480",fontFamily:sans,marginTop:2}}>{r}</div>
     </div>
   );
@@ -74,8 +76,8 @@ function Xtra({x,ac,mob}){
   if(!x) return null;
   if(x.t==="n") return <Nt e={x.e} t={x.tx} bg={x.bg} tc={x.tc}/>;
   if(x.t==="c") return <Cd lang={x.lang} code={x.code} mob={mob}/>;
-  if(x.t==="tb") return <Tb h={x.h} r={x.r} ac={x.ac||ac}/>;
-  if(x.t==="q") return <Qt q={x.q} a={x.a} r={x.r} ac={x.ac||ac}/>;
+  if(x.t==="tb") return <Tb h={x.h} r={x.r} ac={x.ac||ac} mob={mob}/>;
+  if(x.t==="q") return <Qt q={x.q} a={x.a} r={x.r} ac={x.ac||ac} mob={mob}/>;
   return null;
 }
 
@@ -233,7 +235,7 @@ function MV({mod,onComplete,onNext,isCompleted,mob}){
         <div style={{marginBottom:mob?"1.75rem":"2.75rem"}}>
           <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:"1.1rem",flexWrap:"wrap"}}>
             <span style={{background:mod.color,color:C.white,fontSize:12,fontWeight:700,padding:"4px 14px",borderRadius:999,letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:sans}}>{mod.badge}</span>
-            <span style={{display:"flex",alignItems:"center",gap:5,fontSize:13,color:C.muted,fontFamily:sans}}><Clock size={13}/> {mod.time}</span>
+            <span style={{display:"flex",alignItems:"center",gap:5,fontSize:13,color:C.muted,fontFamily:sans}}><Clock size={13} color={C.muted}/> {mod.time}</span>
           </div>
           <h1 style={{fontSize:"clamp(28px,7vw,48px)",fontWeight:700,lineHeight:1.1,fontFamily:serif,color:C.ink,margin:"0 0 0.75rem"}}>
             {mod.t1}<br/><span style={{color:mod.color}}>{mod.t2}</span>
@@ -339,7 +341,7 @@ export default function App(){
         </div>
         {isMobile && (
           <button onClick={()=>setDrawerOpen(false)} aria-label="Fechar menu" style={{background:"transparent",border:"none",padding:6,cursor:"pointer",color:C.muted,display:"flex"}}>
-            <X size={18}/>
+            <X size={18} color={C.muted}/>
           </button>
         )}
       </div>
@@ -375,8 +377,8 @@ export default function App(){
         <AnonBanner onLoginClick={()=>setView("login")}/>
         <header style={{display:"flex",alignItems:"center",gap:10,padding:isMobile?"0.7rem 0.9rem":"0.875rem 1.25rem",background:C.white,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:30}}>
           {isMobile && (
-            <button onClick={()=>setDrawerOpen(true)} aria-label="Abrir menu" style={{width:38,height:38,borderRadius:8,border:`1px solid ${C.border}`,background:C.white,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              <Menu size={18}/>
+            <button onClick={()=>setDrawerOpen(true)} aria-label="Abrir menu" style={{width:38,height:38,borderRadius:8,border:`1px solid ${C.border}`,background:C.white,color:C.ink,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <Menu size={20} color={C.ink}/>
             </button>
           )}
           <div style={{flex:1,minWidth:0}}>
@@ -384,8 +386,8 @@ export default function App(){
             <div style={{fontSize:14,fontWeight:500,color:C.ink,fontFamily:sans,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{active.t1} {active.t2}</div>
           </div>
           <div style={{display:"flex",gap:6,flexShrink:0}}>
-            <button onClick={goPrev} disabled={!hasPrev} style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.white,cursor:hasPrev?"pointer":"not-allowed",opacity:hasPrev?1:0.35,display:"flex",alignItems:"center",justifyContent:"center"}}><ChevronLeft size={16}/></button>
-            <button onClick={goNext} disabled={!hasNext} style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.white,cursor:hasNext?"pointer":"not-allowed",opacity:hasNext?1:0.35,display:"flex",alignItems:"center",justifyContent:"center"}}><ChevronRight size={16}/></button>
+            <button onClick={goPrev} disabled={!hasPrev} style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.white,color:C.ink,cursor:hasPrev?"pointer":"not-allowed",opacity:hasPrev?1:0.35,display:"flex",alignItems:"center",justifyContent:"center"}}><ChevronLeft size={18} color={C.ink}/></button>
+            <button onClick={goNext} disabled={!hasNext} style={{width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:C.white,color:C.ink,cursor:hasNext?"pointer":"not-allowed",opacity:hasNext?1:0.35,display:"flex",alignItems:"center",justifyContent:"center"}}><ChevronRight size={18} color={C.ink}/></button>
           </div>
         </header>
         <div style={{flex:1}}>
@@ -393,7 +395,7 @@ export default function App(){
         </div>
         <footer style={{borderTop:`1px solid ${C.border}`,background:C.white,padding:isMobile?"0.75rem 0.9rem":"0.875rem 1.5rem",display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap"}}>
           <button onClick={goPrev} disabled={!hasPrev} style={{display:"flex",alignItems:"center",gap:7,padding:isMobile?"9px 12px":"9px 16px",background:"transparent",border:`1px solid ${C.border}`,borderRadius:10,cursor:hasPrev?"pointer":"not-allowed",opacity:hasPrev?1:0.35,fontSize:13,color:C.ink,fontFamily:sans}}>
-            <ChevronLeft size={14}/>{hasPrev?MODS[activeIdx-1].badge:"Início"}
+            <ChevronLeft size={14} color={C.ink}/>{hasPrev?MODS[activeIdx-1].badge:"Início"}
           </button>
           {!isMobile && (
             <div style={{display:"flex",gap:5,alignItems:"center"}}>
@@ -401,7 +403,7 @@ export default function App(){
             </div>
           )}
           <button onClick={goNext} disabled={!hasNext} style={{display:"flex",alignItems:"center",gap:7,padding:isMobile?"9px 12px":"9px 16px",background:hasNext?C.ink:C.border,color:hasNext?C.white:C.muted,border:"none",borderRadius:10,cursor:hasNext?"pointer":"not-allowed",fontSize:13,fontWeight:500,fontFamily:sans}}>
-            {hasNext?MODS[activeIdx+1].badge:"Guia concluído!"}<ChevronRight size={14}/>
+            {hasNext?MODS[activeIdx+1].badge:"Guia concluído!"}<ChevronRight size={14} color={hasNext?C.white:C.muted}/>
           </button>
         </footer>
       </main>
