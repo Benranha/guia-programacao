@@ -17,17 +17,14 @@ export default function AuthPage({ onBack }) {
     setBusy(true);
     setError("");
     setInfo("");
-    const currentEmail = email;
-    const currentPassword = password;
-    setEmail("");
-    setPassword("");
     try {
       if (mode === "login") {
-        await signIn(currentEmail, currentPassword);
+        await signIn(email, password);
       } else {
-        const { user, session } = await signUp(currentEmail, currentPassword);
+        const { user, session } = await signUp(email, password);
         if (user && !session) {
           setInfo("Conta criada! Verifique seu email para confirmar antes de entrar.");
+          setPassword("");
         }
       }
     } catch (err) {
