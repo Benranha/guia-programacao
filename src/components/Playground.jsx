@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Code2, X, Play, RotateCcw, Sparkles } from "lucide-react";
+import { useAuth } from "../contexts/useAuth.js";
 import { T, sans, mono, display } from "../lib/theme.js";
 
 const STORAGE_CODE = "gp-playground-code-v1";
@@ -57,6 +58,13 @@ try { ${js} } catch (e) { document.body.insertAdjacentHTML('beforeend', '<pre st
 }
 
 export default function Playground() {
+  const { user } = useAuth();
+  const allowedEmail = import.meta.env.VITE_PLAYGROUND_USER_EMAIL;
+  const authorized =
+    !!user?.email &&
+    !!allowedEmail &&
+    user.email.trim().toLowerCase() === allowedEmail.trim().toLowerCase();
+
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState(loadCode);
   const [tab, setTab] = useState("html");
@@ -96,6 +104,8 @@ export default function Playground() {
   };
 
   const runNow = () => setPreview(buildSrcDoc(code));
+
+  if (!authorized) return null;
 
   return (
     <>
