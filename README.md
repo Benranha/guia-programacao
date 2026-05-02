@@ -15,9 +15,7 @@ O app funciona sem as variáveis de ambiente — só não persiste o progresso. 
 ## Setup do Supabase (gratuito)
 
 1. Crie um projeto em [supabase.com](https://supabase.com) (free tier: 50k MAU, sem cartão).
-2. Em **Authentication → Providers**, habilite:
-   - **Email** (já habilitado por padrão).
-   - **Google** — cole Client ID/Secret do [Google Cloud Console](https://console.cloud.google.com). Guia: [supabase.com/docs/guides/auth/social-login/auth-google](https://supabase.com/docs/guides/auth/social-login/auth-google).
+2. Em **Authentication → Providers**, garanta que **Email** está habilitado (já é o padrão).
 3. Em **SQL Editor**, rode:
 
 ```sql
