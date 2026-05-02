@@ -72,7 +72,16 @@ export default function AskAI({ moduleId, moduleTitle, accent }) {
       const { data, error: fnError } = await supabase.functions.invoke("ask-ai", {
         body: { messages: newMessages, moduleId, moduleTitle },
       });
-      if (fnError) throw new Error(fnError.message || "Erro na função.");
+      if (fnError) {
+        let detail = fnError.message;
+        try {
+          const body = await fnError.context?.json?.();
+          if (body?.error) detail = body.error;
+        } catch {
+          // resposta não é JSON — mantém mensagem genérica
+        }
+        throw new Error(detail || "Erro na função.");
+      }
       if (data?.error) throw new Error(data.error);
       const text = data?.text?.trim();
       if (!text) throw new Error("A IA não respondeu nada — tente reformular a pergunta.");
