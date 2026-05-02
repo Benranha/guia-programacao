@@ -5,6 +5,7 @@ import { useAuth } from "./contexts/useAuth.js";
 import UserMenu from "./components/UserMenu.jsx";
 import AnonBanner from "./components/AnonBanner.jsx";
 import AuthPage from "./components/AuthPage.jsx";
+import AskAI from "./components/AskAI.jsx";
 
 const C={
   cream:"#F8F6F0",white:"#FFF",ink:"#1C1B18",
@@ -74,6 +75,42 @@ function Xtra({x,ac}){
   if(x.t==="tb") return <Tb h={x.h} r={x.r} ac={x.ac||ac}/>;
   if(x.t==="q") return <Qt q={x.q} a={x.a} r={x.r} ac={x.ac||ac}/>;
   return null;
+}
+
+// ── tutorial card (passo a passo + erros comuns) ─────────────────────────────
+function ErrCard({bad,fix,why}){
+  return (
+    <div style={{background:C.cream,borderRadius:10,padding:"0.875rem 1rem",border:`1px solid ${C.border}`,marginBottom:"0.625rem"}}>
+      <div style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:6}}>
+        <span style={{color:"#B83228",fontSize:14,fontWeight:700,flexShrink:0,fontFamily:mono}}>✗</span>
+        <div style={{fontSize:14,lineHeight:1.55,color:"#7A2E1A",fontFamily:sans}}>{bad}</div>
+      </div>
+      <div style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:6}}>
+        <span style={{color:C.green,fontSize:14,fontWeight:700,flexShrink:0,fontFamily:mono}}>✓</span>
+        <div style={{fontSize:14,lineHeight:1.55,color:"#0F5136",fontFamily:sans}}>{fix}</div>
+      </div>
+      <div style={{fontSize:13,lineHeight:1.55,color:C.muted,fontFamily:sans,paddingLeft:22,fontStyle:"italic"}}>{why}</div>
+    </div>
+  );
+}
+function Tut({n,title,intro,code,lang,explain,errors,ac}){
+  return (
+    <div style={{background:C.white,borderRadius:18,padding:"1.875rem",marginBottom:"1.25rem",border:`1px solid ${C.border}`,borderTop:`4px solid ${ac||C.terra}`}}>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:"1rem",flexWrap:"wrap"}}>
+        <span style={{background:C.ink,color:C.white,fontSize:11,fontWeight:700,padding:"3px 11px",borderRadius:999,textTransform:"uppercase",fontFamily:sans,letterSpacing:"0.06em"}}>Tutorial · {n}</span>
+        <h2 style={{fontSize:19,fontWeight:600,fontFamily:serif,color:C.ink,margin:0,lineHeight:1.3}}>{title}</h2>
+      </div>
+      {intro && <p style={{fontSize:15,lineHeight:1.7,color:C.ink,fontFamily:sans,margin:"0 0 1rem"}}>{intro}</p>}
+      {code && <Cd lang={lang} code={code}/>}
+      {explain && <p style={{fontSize:14,lineHeight:1.7,color:C.muted,fontFamily:sans,margin:"0.5rem 0 1.25rem"}}>{explain}</p>}
+      {errors && errors.length>0 && (
+        <div>
+          <div style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:sans,marginBottom:"0.625rem"}}>Erros comuns</div>
+          {errors.map((e,i)=> <ErrCard key={i} bad={e.bad} fix={e.fix} why={e.why}/>)}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ── quiz engine ───────────────────────────────────────────────────────────────
@@ -213,6 +250,21 @@ function MV({mod,onComplete,onNext,isCompleted}){
           </SC>
         ))}
 
+        {/* tutorials (passo a passo detalhado antes da atividade) */}
+        {mod.tutorials && mod.tutorials.length>0 && (
+          <div style={{margin:"2.5rem 0 1.25rem"}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:"0.875rem"}}>
+              <span style={{height:1,flex:1,background:C.border}}/>
+              <span style={{fontSize:11,fontWeight:700,color:C.muted,letterSpacing:"0.12em",textTransform:"uppercase",fontFamily:sans}}>Tutoriais práticos</span>
+              <span style={{height:1,flex:1,background:C.border}}/>
+            </div>
+            <p style={{fontSize:14,lineHeight:1.65,color:C.muted,fontFamily:sans,textAlign:"center",margin:"0 0 1.5rem",maxWidth:480,marginLeft:"auto",marginRight:"auto"}}>
+              Antes da atividade, cada peça que você vai usar — explicada com o código exato e os erros que mais travam quem está começando.
+            </p>
+            {mod.tutorials.map(t=> <Tut key={t.n} n={t.n} title={t.title} intro={t.intro} code={t.code} lang={t.lang} explain={t.explain} errors={t.errors} ac={mod.color}/>)}
+          </div>
+        )}
+
         {/* install steps (VS Code only) */}
         {mod.hasInstall && (
           <div style={{background:C.white,borderRadius:18,padding:"2rem",marginBottom:"1.25rem",border:`1px solid ${C.border}`}}>
@@ -231,6 +283,9 @@ function MV({mod,onComplete,onNext,isCompleted}){
           ? <Quiz qs={mod.act.qs} ac={mod.color} onComplete={onComplete} isCompleted={isCompleted}/>
           : <Chk title={mod.act.title} sub={mod.act.sub} steps={mod.act.steps} ac={mod.color} msg={mod.act.msg} onComplete={onComplete} onNext={onNext} isCompleted={isCompleted}/>
         }
+
+        {/* IA de dúvidas — focada no escopo do módulo ativo */}
+        <AskAI moduleId={mod.id} moduleTitle={`${mod.t1} ${mod.t2}`} accent={mod.color}/>
       </div>
     </div>
   );
@@ -317,7 +372,7 @@ act:{type:"q",qs:[
 {q:"Qual a diferença entre PARA (for) e ENQUANTO (while)?",o:["São a mesma estrutura","PARA repete número definido de vezes; ENQUANTO repete enquanto condição for verdadeira","ENQUANTO é mais rápido","PARA é Python; ENQUANTO é JavaScript"],a:1,ok:"Perfeito. PARA quando você sabe quantas vezes: 'repita 10 vezes'. ENQUANTO quando não sabe: 'repita até a senha estar correta'.",no:"A diferença está na previsibilidade: quando você sabe o número exato, usa uma; quando depende de condição, usa outra."},
 ]}},
 
-{id:"mod2",badge:"Módulo 2",color:"#D47F1A",time:"~2h",
+{id:"mod2",badge:"Módulo 2",color:"#D47F1A",time:"~3h",
 t1:"HTML + CSS —",t2:"o Canva do código.",
 subtitle:"Toda página web do mundo é feita com HTML e CSS. Você vai criar a sua antes do fim deste módulo.",
 sections:[
@@ -340,9 +395,145 @@ x:{t:"c",lang:"Dependências",code:"Módulo 2\n  ├── Depende de:  Módulo 
 body:"Tim Berners-Lee criou o HTML em 1989 para compartilhar documentos entre pesquisadores. Não fazia ideia de que criaria a base de toda a internet moderna.",
 x:{t:"q",ac:"#D47F1A",q:"A web é mais uma invenção social do que técnica. Eu a projetei para ter um efeito social — para ajudar as pessoas a trabalharem juntas.",a:"Tim Berners-Lee",r:"Inventor do HTML e da World Wide Web · 1989"}},
 ],
-act:{type:"c",title:"Construa sua primeira página",sub:"Siga os passos em ordem no VS Code. Cada item desbloqueia o próximo.",msg:"Você criou uma página web real do zero com HTML e CSS. Ela roda no navegador e pode ser publicada na internet.",
+tutorials:[
+{n:"T1",title:"Anatomia de um arquivo HTML",
+intro:"Todo arquivo HTML começa com a mesma estrutura. Sem ela, o navegador entra em modo de compatibilidade antiga e o CSS começa a quebrar de maneiras estranhas.",
+lang:"index.html",
+code:`<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <title>Minha página</title>
+  </head>
+  <body>
+    <!-- conteúdo visível vai aqui -->
+  </body>
+</html>`,
+explain:"Quatro partes obrigatórias: DOCTYPE diz ao navegador o tipo do documento; <html> envolve TUDO; <head> guarda configurações que não aparecem na tela (título da aba, charset, link do CSS); <body> é o que o usuário enxerga.",
+errors:[
+{bad:"Começar direto com <html> sem o <!DOCTYPE html>",fix:"Sempre coloque <!DOCTYPE html> na primeira linha — sem aspas, sem nada antes.",why:"Sem isso, o navegador entra em 'quirks mode' e regras de CSS funcionam de forma imprevisível."},
+{bad:"Escrever texto direto dentro do <head>",fix:"Texto que aparece na página vai SEMPRE no <body>. <head> é só para meta tags, título e links.",why:"Conteúdo no <head> é ignorado pelo navegador na hora de renderizar — fica invisível."},
+{bad:"Esquecer de fechar </body> ou </html>",fix:"Toda tag aberta precisa fechar. Conte mentalmente: para cada <tag>, uma </tag>.",why:"Tags não fechadas fazem o navegador adivinhar onde elas terminam — e ele adivinha errado."},
+{bad:"Usar <meta charset='utf-8'> com aspas simples e em minúsculo",fix:"Funciona, mas o padrão é <meta charset=\"UTF-8\"> com aspas duplas.",why:"Mistura de aspas confunde quando você copia/cola código de fontes diferentes."},
+]},
+{n:"T2",title:"Tags de conteúdo essenciais",
+intro:"Cada tag tem um propósito específico. Usar a tag certa não é frescura: afeta acessibilidade (leitores de tela), SEO (Google) e reaproveitamento futuro.",
+lang:"dentro do <body>",
+code:`<h1>Título principal (só um por página)</h1>
+<h2>Subtítulo de seção</h2>
+
+<p>Um parágrafo de texto. Pode ter
+   várias linhas — o navegador junta tudo.</p>
+
+<a href="https://exemplo.com">Um link</a>
+
+<img src="foto.jpg" alt="Descrição da foto">
+
+<ul>
+  <li>Item de lista</li>
+  <li>Outro item</li>
+</ul>
+
+<div class="cartao">Caixa genérica para agrupar coisas</div>`,
+explain:"<h1>–<h6> são títulos em ordem de importância. <p> = parágrafo. <a> = link (precisa do href). <img> = imagem (precisa de src e alt). <ul>+<li> = lista. <div> = caixa neutra para organizar visualmente.",
+errors:[
+{bad:"Vários <h1> na mesma página",fix:"Um <h1> só, geralmente o nome da página ou seu nome. Depois <h2>, <h3>...",why:"A hierarquia de títulos é como um índice — leitores de tela e o Google usam isso para entender a estrutura."},
+{bad:"<img src='foto.jpg'> sem o atributo alt",fix:"<img src='foto.jpg' alt='Foto do meu cachorro Rex'>",why:"Sem alt, pessoas que usam leitor de tela não sabem o que tem na imagem. Também aparece se a imagem falhar ao carregar."},
+{bad:"<a>clique aqui</a> sem href",fix:"<a href='outra-pagina.html'>clique aqui</a>",why:"Link sem destino não é link — é texto azul que não faz nada quando clicado."},
+{bad:"Quebrar parágrafos com várias <br>",fix:"Use <p> separados. <br> é só para quebra dentro de um mesmo parágrafo (endereço, poesia).",why:"<br> em série bagunça espaçamento e dificulta estilizar com CSS depois."},
+]},
+{n:"T3",title:"Linkando o arquivo CSS no HTML",
+intro:"HTML e CSS ficam em arquivos separados. Você precisa avisar o HTML que existe um CSS para usar — caso contrário, o navegador nem olha pro arquivo.",
+lang:"dentro do <head>",
+code:`<head>
+  <meta charset="UTF-8">
+  <title>Minha página</title>
+  <link rel="stylesheet" href="style.css">
+</head>`,
+explain:"A tag <link> dentro do <head> faz a ponte. 'rel=\"stylesheet\"' avisa que é folha de estilo. 'href=\"style.css\"' é o caminho do arquivo. Se os dois estão na mesma pasta, basta o nome do arquivo.",
+errors:[
+{bad:"<link href=\"style.css\"> sem o rel",fix:"<link rel=\"stylesheet\" href=\"style.css\">",why:"Sem o rel, o navegador não sabe que é CSS — ele simplesmente ignora o arquivo."},
+{bad:"Colocar a tag <link> dentro do <body>",fix:"Sempre dentro do <head>.",why:"Funciona até carregar — mas a página pisca sem estilo antes de aplicar o CSS. É erro de validação."},
+{bad:"href=\"/style.css\" quando o arquivo está na mesma pasta",fix:"href=\"style.css\" (sem a barra inicial).",why:"A barra significa 'raiz do servidor' — em projeto local pelo Live Server isso quebra o caminho."},
+{bad:"Salvar o CSS com nome 'Style.css' e linkar como 'style.css'",fix:"Mantenha tudo minúsculo e sem acento nos nomes de arquivo.",why:"No seu computador pode até funcionar, mas em servidor Linux (publicação) é case-sensitive — vai quebrar."},
+]},
+{n:"T4",title:"Seletores CSS — tag, classe e id",
+intro:"Para aplicar estilo, o CSS precisa saber QUAL elemento receber o estilo. Existem três formas — a confusão entre elas é o erro #1 de quem está começando.",
+lang:"style.css",
+code:`/* por TAG — afeta TODOS os <p> da página */
+p {
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* por CLASSE — começa com . — pode repetir em vários elementos */
+.destaque {
+  background: #FFF3B0;
+  padding: 8px;
+}
+
+/* por ID — começa com # — só UM elemento na página inteira */
+#cabecalho {
+  font-size: 48px;
+}`,
+explain:"TAG = todos os elementos daquele tipo. CLASSE (ponto) = todos os elementos com aquela class. ID (cerquilha) = só o único elemento com aquele id. No HTML você usa class=\"destaque\" e id=\"cabecalho\" para conectar.",
+errors:[
+{bad:"Usar # quando devia ser . — ou vice-versa",fix:"Decore: PONTO é classe, CERQUILHA é único. Se você quer reaproveitar o estilo, use classe.",why:"Esse é o erro mais comum de iniciante: o CSS é válido, mas simplesmente não bate com nada — nada acontece, sem erro."},
+{bad:"Dois elementos com o mesmo id",fix:"Use class quando precisar repetir.",why:"id deve ser único. Repetir hoje funciona, mas depois quando você usar JavaScript vai pegar só o primeiro e te deixar maluco."},
+{bad:".meu botao { color: red; }",fix:".meu-botao { color: red; } — sem espaço, com hífen.",why:"O espaço significa 'descendente'. .meu .botao busca um .botao DENTRO de .meu — coisa totalmente diferente."},
+{bad:"Esquecer o ; no fim de cada linha",fix:"color: red; background: blue; — ponto-e-vírgula em TODA linha.",why:"Sem ponto-e-vírgula, a próxima regra é colada na anterior e o CSS quebra silenciosamente daquele ponto em diante."},
+]},
+{n:"T5",title:"Box model — espaço dentro e fora",
+intro:"Cada elemento HTML é uma caixa retangular. Você controla o espaço dentro da caixa (padding), a borda da caixa (border) e o espaço fora (margin). Entender isso é metade do CSS.",
+lang:"style.css",
+code:`.cartao {
+  margin: 20px;       /* espaço FORA da caixa */
+  border: 2px solid #B85438;
+  padding: 16px;      /* espaço DENTRO da caixa, entre borda e conteúdo */
+  background: white;
+  border-radius: 12px;
+}
+
+/* atalho universal — recomendado */
+* { box-sizing: border-box; }`,
+explain:"Pense numa moldura: padding é o espaço entre a foto e o vidro (interno). border é o vidro. margin é o espaço entre a moldura e a parede (externo). Os três se SOMAM no tamanho final — a menos que você use box-sizing: border-box.",
+errors:[
+{bad:"Usar margin para afastar texto da borda do próprio elemento",fix:"Use padding. Margin afasta de OUTROS elementos — padding cria espaço DENTRO.",why:"Margin empurra a caixa inteira. Quem precisa respirar é o conteúdo dentro dela — isso é padding."},
+{bad:"padding: 10 20 (sem unidade)",fix:"padding: 10px 20px — sempre com unidade.",why:"CSS exige unidade em quase todo valor de tamanho. Sem unidade, a regra é ignorada e nada acontece."},
+{bad:"Achar que width: 200px sempre dá 200px no total",fix:"Adicione * { box-sizing: border-box; } no topo do CSS.",why:"Por padrão, width só conta o conteúdo. Padding e border somam por fora — uma caixa de 200px com padding 20px tem 240px de largura real."},
+{bad:"margin: 20 px (com espaço entre número e unidade)",fix:"margin: 20px — sem espaço, colado.",why:"Espaço quebra o valor. CSS é literal — '20 px' não é entendido como '20 pixels'."},
+]},
+{n:"T6",title:"Erros que travam quem está começando",
+intro:"Antes de seguir para a atividade, conheça os sintomas mais comuns. Quando travar — e você vai travar — volte aqui.",
+lang:"sintomas → causas",
+code:`→ "Mudei o CSS e nada acontece"
+   • Esqueceu de salvar o arquivo (Ctrl+S / Cmd+S)
+   • Live Server em cache → recarregue forçado (Ctrl+Shift+R)
+   • CSS linkado errado → revise T3
+   • Erro de digitação no seletor (.cartao vs .Cartao)
+
+→ "Imagem não aparece — só um quadradinho"
+   • Caminho errado em src
+   • Arquivo fora da pasta correta
+   • Letra maiúscula trocada (Foto.jpg ≠ foto.jpg)
+   • Esqueceu a extensão (.jpg, .png)
+
+→ "Tudo ficou em uma linha só"
+   • Esqueceu de fechar uma tag anterior
+   • Usou <span> onde precisava de <div>
+   • CSS com display: inline em algo que devia ser block
+
+→ "A regra CSS está sendo ignorada"
+   • Outra regra mais específica está sobrescrevendo
+   • Falta ponto-e-vírgula na linha de cima
+   • Faltou unidade (px, rem, %)
+   • Usou # quando era . (ou vice-versa)`,
+explain:"Quando algo não funciona: 1) salve o arquivo (Ctrl+S), 2) atualize forçado (Ctrl+Shift+R), 3) abra o DevTools (F12) e veja o console e a aba Elements — o navegador mostra o que está acontecendo de verdade.",
+errors:[]},
+],
+act:{type:"c",title:"Construa sua primeira página",sub:"Siga os passos em ordem. Cada passo já foi explicado em detalhe nos tutoriais T1 a T6 — volte se precisar.",msg:"Você criou uma página web real do zero com HTML e CSS. Ela roda no navegador e pode ser publicada na internet.",
 steps:[
-{id:"h1",l:"Crie o arquivo index.html na pasta guia-programacao"},{id:"h2",l:"Adicione a estrutura basica HTML: DOCTYPE, html, head, body"},{id:"h3",l:"Adicione um h1 com seu nome dentro do body"},{id:"h4",l:"Adicione um parágrafo sobre você"},{id:"h5",l:"Adicione uma lista com 3 habilidades suas"},{id:"h6",l:"Crie o arquivo style.css na mesma pasta"},{id:"h7",l:"Linke o CSS no HTML com a tag link dentro do head"},{id:"h8",l:"No CSS, mude a cor de fundo do body"},{id:"h9",l:"Defina uma fonte e tamanho para o texto"},{id:"h10",l:"Adicione padding e margem para o conteúdo respirar"},{id:"h11",l:"Abra com o Live Server e veja no navegador"},
+{id:"h1",l:"Crie o arquivo index.html na pasta guia-programacao (T1)"},{id:"h2",l:"Adicione a estrutura básica: DOCTYPE, html, head, body (T1)"},{id:"h3",l:"Adicione um <h1> com seu nome dentro do body (T2)"},{id:"h4",l:"Adicione um <p> com um parágrafo sobre você (T2)"},{id:"h5",l:"Adicione uma <ul> com 3 <li> de habilidades suas (T2)"},{id:"h6",l:"Crie o arquivo style.css na mesma pasta (T3)"},{id:"h7",l:"Linke o CSS dentro do <head> com a tag <link> (T3)"},{id:"h8",l:"No CSS, mude a cor de fundo do body (T4)"},{id:"h9",l:"Defina font-family e font-size para o body (T4)"},{id:"h10",l:"Adicione padding ao body para o conteúdo respirar (T5)"},{id:"h11",l:"Crie uma classe .destaque e aplique a um elemento (T4)"},{id:"h12",l:"Abra com o Live Server e veja no navegador (T6)"},
 ]}},
 
 {id:"mod3",badge:"Módulo 3",color:"#3B8BD4",time:"~2h",
