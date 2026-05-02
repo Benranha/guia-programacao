@@ -5,7 +5,7 @@
 //   supabase functions deploy ask-ai
 //   supabase secrets set GEMINI_API_KEY=AIza...
 
-const MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-2.5-flash";
 const GEMINI_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 const MAX_TOKENS = 1024;
