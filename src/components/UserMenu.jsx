@@ -1,12 +1,9 @@
-import { useState } from "react";
 import { LogIn, LogOut, User } from "lucide-react";
 import { useAuth } from "../contexts/useAuth.js";
 import { C, sans } from "../lib/theme.js";
-import AuthModal from "./AuthModal.jsx";
 
-export default function UserMenu() {
+export default function UserMenu({ onLoginClick }) {
   const { user, signOut, loading } = useAuth();
-  const [open, setOpen] = useState(false);
 
   if (loading) {
     return (
@@ -18,32 +15,29 @@ export default function UserMenu() {
 
   if (!user) {
     return (
-      <>
-        <div style={{ padding: "0.875rem 1.25rem", borderTop: `1px solid ${C.border}` }}>
-          <button
-            onClick={() => setOpen(true)}
-            style={{
-              width: "100%",
-              padding: "9px 12px",
-              background: C.terra,
-              color: C.white,
-              border: "none",
-              borderRadius: 10,
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer",
-              fontFamily: sans,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 7,
-            }}
-          >
-            <LogIn size={14} /> Entrar / Criar conta
-          </button>
-        </div>
-        <AuthModal open={open} onClose={() => setOpen(false)} />
-      </>
+      <div style={{ padding: "0.875rem 1.25rem", borderTop: `1px solid ${C.border}` }}>
+        <button
+          onClick={onLoginClick}
+          style={{
+            width: "100%",
+            padding: "9px 12px",
+            background: C.terra,
+            color: C.white,
+            border: "none",
+            borderRadius: 10,
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer",
+            fontFamily: sans,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 7,
+          }}
+        >
+          <LogIn size={14} /> Entrar / Criar conta
+        </button>
+      </div>
     );
   }
 
