@@ -1,40 +1,22 @@
-import { LogIn, LogOut, User } from "lucide-react";
+import { LogIn, LogOut } from "lucide-react";
 import { useAuth } from "../contexts/useAuth.js";
-import { C, sans } from "../lib/theme.js";
+import { T, sans } from "../lib/theme.js";
 
 export default function UserMenu({ onLoginClick }) {
   const { user, signOut, loading } = useAuth();
 
   if (loading) {
     return (
-      <div style={{ padding: "0.875rem 1.25rem", borderTop: `1px solid ${C.border}`, fontSize: 11, color: C.muted, fontFamily: sans }}>
-        Carregando...
+      <div style={{ padding: "0.875rem 1.125rem", borderTop: `1px solid ${T.border}`, fontSize: 11, color: T.textMuted, fontFamily: sans }}>
+        Carregando…
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div style={{ padding: "0.875rem 1.25rem", borderTop: `1px solid ${C.border}` }}>
-        <button
-          onClick={onLoginClick}
-          style={{
-            width: "100%",
-            padding: "9px 12px",
-            background: C.terra,
-            color: C.white,
-            border: "none",
-            borderRadius: 10,
-            fontSize: 13,
-            fontWeight: 600,
-            cursor: "pointer",
-            fontFamily: sans,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 7,
-          }}
-        >
+      <div style={{ padding: "0.875rem 1.125rem", borderTop: `1px solid ${T.border}` }}>
+        <button onClick={onLoginClick} className="gp-btn gp-btn-primary" style={{ width: "100%", fontSize: 13 }}>
           <LogIn size={14} /> Entrar / Criar conta
         </button>
       </div>
@@ -42,44 +24,54 @@ export default function UserMenu({ onLoginClick }) {
   }
 
   const label = user.email || "Usuário";
+  const initial = (label[0] || "U").toUpperCase();
 
   return (
-    <div style={{ padding: "0.875rem 1.25rem", borderTop: `1px solid ${C.border}`, display: "flex", flexDirection: "column", gap: 8 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: sans, fontSize: 12, color: C.ink, minWidth: 0 }}>
+    <div
+      style={{
+        padding: "0.875rem 1.125rem",
+        borderTop: `1px solid ${T.border}`,
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 9, fontFamily: sans, minWidth: 0 }}>
         <span
           style={{
-            width: 26,
-            height: 26,
+            width: 28,
+            height: 28,
             borderRadius: "50%",
-            background: C.terraLight,
-            color: C.terra,
+            background: T.accent,
+            color: "#fff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
+            fontSize: 12,
+            fontWeight: 700,
           }}
+          aria-hidden
         >
-          <User size={14} />
+          {initial}
         </span>
-        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ fontSize: 11, color: T.textSubtle, lineHeight: 1.2 }}>Logado como</div>
+          <div
+            style={{
+              fontSize: 12,
+              color: T.text,
+              fontWeight: 500,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+          </div>
+        </div>
       </div>
-      <button
-        onClick={signOut}
-        style={{
-          padding: "7px 10px",
-          background: "transparent",
-          color: C.muted,
-          border: `1px solid ${C.border}`,
-          borderRadius: 8,
-          fontSize: 12,
-          cursor: "pointer",
-          fontFamily: sans,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 6,
-        }}
-      >
+      <button onClick={signOut} className="gp-btn gp-btn-ghost" style={{ fontSize: 12, padding: "7px 10px" }}>
         <LogOut size={12} /> Sair
       </button>
     </div>

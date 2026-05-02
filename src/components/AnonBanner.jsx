@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { AlertCircle, X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { useAuth } from "../contexts/useAuth.js";
-import { C, sans } from "../lib/theme.js";
+import { T, sans } from "../lib/theme.js";
 
 export default function AnonBanner({ onLoginClick }) {
   const { user, loading } = useAuth();
@@ -12,9 +12,9 @@ export default function AnonBanner({ onLoginClick }) {
   return (
     <div
       style={{
-        background: C.terraLight,
-        color: C.terraDark,
-        borderBottom: `1px solid ${C.terra}30`,
+        background: T.accentSoft,
+        color: T.text,
+        borderBottom: `1px solid ${T.border}`,
         padding: "10px 16px",
         fontFamily: sans,
         fontSize: 13,
@@ -24,23 +24,14 @@ export default function AnonBanner({ onLoginClick }) {
         flexWrap: "wrap",
       }}
     >
-      <AlertCircle size={16} style={{ flexShrink: 0 }} />
+      <Info size={15} color={T.accent} style={{ flexShrink: 0 }} />
       <span style={{ flex: 1, minWidth: 200, lineHeight: 1.5 }}>
-        Você não está logado. Seu progresso <strong>não será salvo</strong> ao recarregar a página.
+        Você não está logado — seu progresso <strong>não será salvo</strong> ao recarregar.
       </span>
       <button
         onClick={onLoginClick}
-        style={{
-          padding: "6px 12px",
-          background: C.terra,
-          color: C.white,
-          border: "none",
-          borderRadius: 8,
-          fontSize: 12,
-          fontWeight: 600,
-          cursor: "pointer",
-          fontFamily: sans,
-        }}
+        className="gp-btn gp-btn-primary"
+        style={{ padding: "6px 14px", fontSize: 12 }}
       >
         Entrar
       </button>
@@ -50,7 +41,7 @@ export default function AnonBanner({ onLoginClick }) {
         style={{
           background: "transparent",
           border: "none",
-          color: C.terraDark,
+          color: T.textMuted,
           cursor: "pointer",
           padding: 4,
           display: "flex",

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
 import { useAuth } from "../contexts/useAuth.js";
-import { C, serif, sans } from "../lib/theme.js";
+import { T, sans, display } from "../lib/theme.js";
 
 export default function AuthPage({ onBack }) {
   const { signIn, signUp, isConfigured } = useAuth();
@@ -50,7 +50,7 @@ export default function AuthPage({ onBack }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: `linear-gradient(160deg, ${C.ink} 0%, #2A2926 100%)`,
+        background: `radial-gradient(ellipse at top, var(--accent-soft), var(--bg) 60%)`,
         zIndex: 100,
         display: "flex",
         flexDirection: "column",
@@ -59,22 +59,7 @@ export default function AuthPage({ onBack }) {
       }}
     >
       <div style={{ padding: "1.25rem 1.5rem" }}>
-        <button
-          onClick={onBack}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 7,
-            padding: "8px 14px",
-            background: "rgba(255,255,255,0.08)",
-            color: "#F0EBE3",
-            border: "1px solid rgba(255,255,255,0.15)",
-            borderRadius: 10,
-            fontSize: 13,
-            cursor: "pointer",
-            fontFamily: sans,
-          }}
-        >
+        <button onClick={onBack} className="gp-btn gp-btn-ghost" style={{ fontSize: 13 }}>
           <ArrowLeft size={14} /> Voltar ao guia
         </button>
       </div>
@@ -89,21 +74,35 @@ export default function AuthPage({ onBack }) {
         }}
       >
         <div
+          className="gp-card gp-fade-in"
           style={{
-            background: C.white,
-            borderRadius: 22,
             padding: "2.25rem 2rem",
             maxWidth: 440,
             width: "100%",
-            boxShadow: "0 24px 60px rgba(0,0,0,0.4)",
+            boxShadow: T.shadowLg,
           }}
         >
           <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
             <div
               style={{
-                fontSize: 10,
+                width: 44,
+                height: 44,
+                borderRadius: 12,
+                background: T.accent,
+                color: "#fff",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 1rem",
+              }}
+            >
+              <BookOpen size={22} />
+            </div>
+            <div
+              style={{
+                fontSize: 11,
                 fontWeight: 700,
-                color: C.terra,
+                color: T.accent,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 marginBottom: 8,
@@ -114,41 +113,43 @@ export default function AuthPage({ onBack }) {
             <h2
               style={{
                 fontSize: 28,
-                fontWeight: 700,
-                fontFamily: serif,
-                color: C.ink,
+                fontWeight: 800,
+                fontFamily: display,
+                color: T.textStrong,
                 margin: "0 0 0.5rem",
                 lineHeight: 1.15,
+                letterSpacing: "-0.02em",
               }}
             >
-              {mode === "login" ? "Entrar" : "Criar conta"}
+              {mode === "login" ? "Bem-vindo de volta" : "Criar sua conta"}
             </h2>
-            <p style={{ fontSize: 14, color: C.muted, margin: 0, lineHeight: 1.5 }}>
+            <p style={{ fontSize: 14, color: T.textMuted, margin: 0, lineHeight: 1.55 }}>
               {mode === "login"
                 ? "Acesse para continuar de onde parou."
-                : "Crie uma conta para salvar seu progresso entre dispositivos."}
+                : "Salve seu progresso entre dispositivos."}
             </p>
           </div>
 
           {!isConfigured && (
             <div
               style={{
-                background: "#FBF0EF",
-                color: "#B83228",
+                background: T.dangerSoft,
+                color: T.danger,
                 padding: "10px 12px",
                 borderRadius: 10,
                 fontSize: 13,
                 marginBottom: "1rem",
                 lineHeight: 1.5,
+                border: `1px solid ${T.danger}`,
               }}
             >
-              Supabase não configurado. Defina <code>VITE_SUPABASE_URL</code> e{" "}
-              <code>VITE_SUPABASE_ANON_KEY</code> em <code>.env.local</code>.
+              Supabase não configurado. Defina <code style={{ fontFamily: "var(--font-mono)" }}>VITE_SUPABASE_URL</code> e{" "}
+              <code style={{ fontFamily: "var(--font-mono)" }}>VITE_SUPABASE_ANON_KEY</code> em <code style={{ fontFamily: "var(--font-mono)" }}>.env.local</code>.
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: C.ink, marginBottom: 5 }}>
+            <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: T.text, marginBottom: 6 }}>
               Email
             </label>
             <input
@@ -158,18 +159,10 @@ export default function AuthPage({ onBack }) {
               required
               disabled={busy || !isConfigured}
               autoFocus
-              style={{
-                width: "100%",
-                padding: "11px 13px",
-                border: `1.5px solid ${C.border}`,
-                borderRadius: 10,
-                fontSize: 14,
-                fontFamily: sans,
-                marginBottom: "0.875rem",
-                boxSizing: "border-box",
-              }}
+              className="gp-input"
+              style={{ marginBottom: "0.875rem" }}
             />
-            <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: C.ink, marginBottom: 5 }}>
+            <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: T.text, marginBottom: 6 }}>
               Senha
             </label>
             <input
@@ -179,27 +172,20 @@ export default function AuthPage({ onBack }) {
               required
               minLength={6}
               disabled={busy || !isConfigured}
-              style={{
-                width: "100%",
-                padding: "11px 13px",
-                border: `1.5px solid ${C.border}`,
-                borderRadius: 10,
-                fontSize: 14,
-                fontFamily: sans,
-                marginBottom: "1rem",
-                boxSizing: "border-box",
-              }}
+              className="gp-input"
+              style={{ marginBottom: "1rem" }}
             />
 
             {error && (
               <div
                 style={{
-                  background: "#FBF0EF",
-                  color: "#B83228",
+                  background: T.dangerSoft,
+                  color: T.danger,
                   padding: "9px 12px",
                   borderRadius: 8,
                   fontSize: 13,
                   marginBottom: "0.875rem",
+                  borderLeft: `3px solid ${T.danger}`,
                 }}
               >
                 {error}
@@ -208,12 +194,13 @@ export default function AuthPage({ onBack }) {
             {info && (
               <div
                 style={{
-                  background: C.greenLight,
-                  color: C.green,
+                  background: T.successSoft,
+                  color: T.success,
                   padding: "9px 12px",
                   borderRadius: 8,
                   fontSize: 13,
                   marginBottom: "0.875rem",
+                  borderLeft: `3px solid ${T.success}`,
                 }}
               >
                 {info}
@@ -223,38 +210,16 @@ export default function AuthPage({ onBack }) {
             <button
               type="submit"
               disabled={busy || !isConfigured}
-              style={{
-                width: "100%",
-                padding: "13px",
-                background: busy || !isConfigured ? C.border : C.terra,
-                color: busy || !isConfigured ? C.muted : C.white,
-                border: "none",
-                borderRadius: 10,
-                fontSize: 15,
-                fontWeight: 600,
-                cursor: busy || !isConfigured ? "not-allowed" : "pointer",
-                fontFamily: sans,
-              }}
+              className="gp-btn gp-btn-primary"
+              style={{ width: "100%", padding: "13px", fontSize: 15, fontWeight: 600 }}
             >
-              {busy ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta"}
+              {busy ? "Aguarde…" : mode === "login" ? "Entrar" : "Criar conta"}
             </button>
           </form>
 
-          <div style={{ textAlign: "center", marginTop: "1.25rem", fontSize: 13, color: C.muted }}>
+          <div style={{ textAlign: "center", marginTop: "1.25rem", fontSize: 13, color: T.textMuted }}>
             {mode === "login" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
-            <button
-              onClick={switchMode}
-              style={{
-                background: "transparent",
-                border: "none",
-                color: C.terra,
-                fontWeight: 600,
-                cursor: "pointer",
-                padding: 0,
-                fontSize: 13,
-                fontFamily: sans,
-              }}
-            >
+            <button onClick={switchMode} className="gp-link" style={{ fontSize: 13 }}>
               {mode === "login" ? "Criar conta" : "Entrar"}
             </button>
           </div>
