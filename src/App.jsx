@@ -11,6 +11,7 @@ import UserMenu from "./components/UserMenu.jsx";
 import AnonBanner from "./components/AnonBanner.jsx";
 import AuthPage from "./components/AuthPage.jsx";
 import AskAI from "./components/AskAI.jsx";
+import Playground from "./components/Playground.jsx";
 import { MODS } from "./modules/index.js";
 
 // ── primitives ────────────────────────────────────────────────────────────────
@@ -1099,6 +1100,7 @@ export default function App() {
           </button>
         </footer>
       </main>
+      <Playground />
     </div>
   );
 }
