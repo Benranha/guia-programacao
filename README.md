@@ -47,7 +47,7 @@ VITE_SUPABASE_ANON_KEY=...
 
 ## IA de dúvidas (opcional)
 
-Cada módulo termina com um chat "Pergunte à IA" focado **só no conteúdo do módulo**. A integração usa Google Gemini 2.0 Flash via uma Edge Function do Supabase — a chave da API nunca fica exposta no front.
+Cada módulo termina com um chat "Pergunte à IA" focado **só no conteúdo do módulo**. A integração usa Google Gemini 2.5 Flash via uma Edge Function do Supabase — a chave da API nunca fica exposta no front.
 
 ### Deploy da Edge Function
 
