@@ -1,0 +1,28 @@
+export default {
+  id: "mod4", badge: "Módulo 4", color: "#D4537E", time: "~2h",
+  t1: "UI e UX —", t2: "design com propósito.",
+  subtitle: "Você já tem intuição estética. Aqui você aprende a nomear, analisar e replicar o que faz uma interface boa.",
+  sections: [
+    { num: "1", label: "Definição", sc: "#7F77DD", title: "UI vs. UX",
+      body: "UI (User Interface) é o que o usuário vê e toca — botões, cores, tipografia, layout. UX (User Experience) é o que o usuário experiencia ao usar — facilidade, clareza, satisfação.",
+      x: { t: "n", e: "🚗", tx: "Analogia: UI é o design do carro — cor, formato, interior. UX é a experiência de dirigir — como o volante responde, se a visibilidade é boa. Um carro pode ser lindo (UI) e desconfortável de dirigir (UX ruim).", bg: "#FAF0EB", tc: "#7A2E1A" } },
+    { num: "2", label: "Comparação", sc: "#1D9E75", title: "As 10 Heurísticas de Nielsen",
+      body: "Jakob Nielsen publicou em 1994 dez princípios de usabilidade que ainda são o padrão da indústria.",
+      x: { t: "tb", h: ["#", "Heurística", "Em palavras simples"], r: [["1", "Visibilidade do status", "Sempre diga o que está acontecendo"], ["2", "Correspondência com o mundo real", "Use palavras que o usuário conhece"], ["3", "Controle e liberdade", "Permita desfazer ações"], ["4", "Consistência e padrões", "Mesma coisa = mesmo visual"], ["5", "Prevenção de erros", "Previna antes de corrigir"], ["6", "Reconhecimento > Recordação", "Mostre opções, não force memorização"], ["7", "Flexibilidade", "Atalhos para experientes"], ["8", "Design minimalista", "Menos é mais"], ["9", "Recuperação de erros", "Mensagens úteis e humanas"], ["10", "Ajuda e documentação", "Fácil de encontrar quando necessária"]] } },
+    { num: "3", label: "Circunstâncias", sc: "#D47F1A", title: "Princípios de UI: hierarquia e consistência",
+      body: "Enquanto as heurísticas são sobre UX, estes princípios são sobre o visual da interface.",
+      x: { t: "tb", h: ["Princípio", "O que é", "Exemplo"], r: [["Hierarquia visual", "Importantes têm mais destaque", "Título grande, subtítulo médio, corpo pequeno"], ["Contraste", "Texto e fundo com diferença legível", "Texto escuro em fundo claro"], ["Consistência", "Mesma função = mesma aparência", "Todos os botões principais em azul"], ["Acessibilidade", "Funciona para todos", "Contraste WCAG, textos alternativos"]] } },
+    { num: "4", label: "Relação", sc: "#3B8BD4", title: "UI/UX no guia",
+      body: "UI/UX conecta tudo que foi aprendido até aqui com o usuário final. Todo código serve alguém.",
+      x: { t: "c", lang: "Dependências", code: "Módulo 4\n  ├── Depende de:  Módulo 2 (HTML+CSS é onde UI/UX vira código)\n  ├── Leva a:      Projeto integrador (aplicar tudo junto)\n  └── Conecta com: todos os módulos — toda interface tem UX" } },
+    { num: "5", label: "Testemunho", sc: "#D4537E", title: "O livro que mudou o design de produtos",
+      body: "Don Norman cunhou o termo 'user experience' na Apple nos anos 90. O livro dele analisa por que produtos cotidianos são difíceis de usar e como o design poderia evitar isso.",
+      x: { t: "q", ac: "#D4537E", q: "Quando as coisas funcionam bem, não notamos. É só quando funcionam mal que nos damos conta de que design existia o tempo todo.", a: "Don Norman", r: "Psicólogo cognitivo · autor de 'The Design of Everyday Things' · 1988" } },
+  ],
+  act: { type: "q", qs: [
+    { q: "Você abre um app de delivery. O botão de confirmar pedido está no canto superior esquerdo, em fonte pequena e cor cinza. Qual problema de UX isso representa?", o: ["Nenhum — o usuário encontra eventualmente", "Viola a visibilidade — a ação principal não tem destaque compatível com sua importância", "O problema é de UI, não de UX", "O app precisa de mais cores"], a: 1, ok: "Exato! O botão mais importante precisa de destaque proporcional — tamanho, cor e posição claros. É a heurística de visibilidade do status.", no: "Quando a ação mais importante não tem destaque, o usuário precisa procurar por ela. Qual heurística de Nielsen trata isso?" },
+    { q: "Qual a diferença entre UI e UX?", o: ["São a mesma coisa", "UI é o que o usuário vê (botões, cores, layout); UX é o que o usuário experiencia (fluidez, clareza, satisfação)", "UI é para web; UX é para mobile", "UX é mais avançado — profissionais migram de UI para UX"], a: 1, ok: "Perfeito! UI = visual. UX = a jornada completa. Uma tela pode ser linda (UI) e frustrante de usar (UX ruim).", no: "Releia a Seção 1. A distinção: UI é o que você vê, UX é o que você sente ao usar. Porta bonita (UI) e difícil de abrir (UX ruim)." },
+    { q: "Um formulário com 20 campos não indica quais estão errados quando o usuário tenta enviar. Qual heurística é violada?", o: ["Design minimalista", "Ajuda para reconhecer e recuperar erros", "Flexibilidade de uso", "Consistência"], a: 1, ok: "Correto! O sistema deve ajudar o usuário a entender e corrigir erros — não apenas rejeitar o formulário sem explicação.", no: "Quando um sistema não explica o que deu errado nem como corrigir, qual heurística de Nielsen está sendo violada?" },
+    { q: "Você usa 7 fontes diferentes, 5 paletas de cores e 4 tamanhos de botão numa mesma página. Qual princípio de UI isso viola?", o: ["Nenhum — variedade é criativa", "Consistência — mesma função deve ter mesma aparência; variação sem propósito cria ruído", "Acessibilidade", "Responsividade"], a: 1, ok: "Exato! Consistência: mesma função, mesma aparência. Variação excessiva cria ruído visual e dificulta o aprendizado do padrão.", no: "Se cada botão parece diferente, o usuário não sabe qual padrão seguir. Qual princípio trata isso?" },
+  ] },
+};

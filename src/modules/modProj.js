@@ -1,0 +1,36 @@
+export default {
+  id: "modProj", badge: "Projeto", color: "#D85A30", time: "~3h",
+  t1: "Projeto", t2: "integrador.",
+  subtitle: "Tudo que você aprendeu, aplicado em uma página real que você vai querer mostrar para as pessoas.",
+  pillars: [{ l: "Lógica", c: "#1D9E75" }, { l: "HTML+CSS", c: "#D47F1A" }, { l: "Python", c: "#3B8BD4" }, { l: "UI/UX", c: "#D4537E" }, { l: "VS Code", c: "#7F77DD" }],
+  sections: [
+    { num: "B", label: "Briefing", sc: "#D85A30", title: "O que você vai construir",
+      body: "Crie uma página de portfólio pessoal que reúna seus projetos, sua identidade visual e um script Python funcional relacionado ao tema. Não existe um resultado certo — existe o seu resultado.",
+      xs: [
+        { t: "n", e: "🎨", tx: "Módulo 1 e 2: estrutura lógica das seções, fluxo de conteúdo, hierarquia da informação.", bg: "#FAF0EB", tc: "#7A2E1A" },
+        { t: "n", e: "💻", tx: "Módulo 2: HTML para estrutura, CSS para visual — paleta, tipografia, espaçamento.", bg: "#FAEEDA", tc: "#633806" },
+        { t: "n", e: "🐍", tx: "Módulo 3: um script Python — lista de obras, calculadora de preços de freela, ou gerador de paletas.", bg: "#E6F1FB", tc: "#042C53" },
+        { t: "n", e: "✨", tx: "Módulo 4: as 10 heurísticas de Nielsen como checklist de revisão antes de entregar.", bg: "#FBEAF0", tc: "#4B1528" },
+      ] },
+    { num: "E", label: "Estrutura", sc: "#3B8BD4", title: "Mínimo sugerido",
+      body: "A página precisa de pelo menos 4 seções e um script Python funcional.",
+      xs: [
+        { t: "c", lang: "index.html", code: "<header>\n  <!-- Seu nome + navegação -->\n</header>\n<section id='sobre'>\n  <!-- Quem você é, o que você faz -->\n</section>\n<section id='trabalhos'>\n  <!-- Galeria de projetos ou artes -->\n</section>\n<section id='contato'>\n  <!-- Email, redes sociais -->\n</section>" },
+        { t: "c", lang: "exemplo_python.py", code: "obras = [\n    {'titulo': 'Logo para café', 'valor': 350},\n    {'titulo': 'Banner Instagram', 'valor': 150},\n]\ntotal = 0\nfor obra in obras:\n    print(obra['titulo'], '→ R$', obra['valor'])\n    total += obra['valor']\nprint('Total: R$', total)" },
+      ] },
+  ],
+  act: { type: "c", title: "Lista de entrega", sub: "Complete cada etapa em ordem. Quando todas estiverem marcadas, o guia está concluído.", msg: "Parabéns! Você criou um portfólio web real com HTML, CSS, Python e boas práticas de UI/UX. Este é o ponto de partida — não o fim. GitHub e MySQL chegam em breve.",
+    steps: [
+      { id: "p1", l: "Escolha o tema: portfólio de artes, página pessoal ou apresentação de projeto" },
+      { id: "p2", l: "Rascunhe a estrutura no papel — mínimo: cabeçalho, sobre você, trabalhos, contato" },
+      { id: "p3", l: "Use as 10 heurísticas de Nielsen como guia das decisões de design" },
+      { id: "p4", l: "Crie index.html e style.css no VS Code" },
+      { id: "p5", l: "Implemente o HTML com pelo menos 4 seções distintas" },
+      { id: "p6", l: "Aplique CSS com paleta de cores coerente — máximo 3 cores principais" },
+      { id: "p7", l: "Garanta hierarquia visual: h1 maior que h2, h2 maior que parágrafo" },
+      { id: "p8", l: "Escreva um script Python simples relacionado ao tema" },
+      { id: "p9", l: "Teste com Live Server e ajuste o que parecer errado" },
+      { id: "p10", l: "Revise com as heurísticas: consistente? Clara? Sem erros visuais?" },
+      { id: "p11", l: "Mostre para uma pessoa e anote o que ela achou difícil de entender" },
+    ] },
+};

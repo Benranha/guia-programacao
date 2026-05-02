@@ -1,0 +1,28 @@
+export default {
+  id: "mod0", badge: "Módulo 0", color: "#B85438", time: "~50 min",
+  t1: "Você já", t2: "programa.",
+  subtitle: "Antes de qualquer linguagem, descubra que o raciocínio por trás já está em você.",
+  sections: [
+    { num: "1", label: "Definição", sc: "#7F77DD", title: "O que é programar?",
+      body: "Programar é dar instruções tão claras que até alguém completamente literal consiga seguir sem errar. Um computador não interpreta, não adivinha e não preenche lacunas.",
+      x: { t: "n", e: "💡", tx: "A parte mais importante da programação não é a linguagem — é o raciocínio. Toda sintaxe se aprende em dias. O raciocínio lógico é o que leva meses.", bg: "#EEEDFE", tc: "#3C3489" } },
+    { num: "2", label: "Comparação", sc: "#1D9E75", title: "Prompt, pseudocódigo e código",
+      body: "Um prompt bem escrito e um algoritmo têm estrutura idêntica: objetivo claro, parâmetros, restrições. A diferença não é a inteligência — é só a linguagem usada.",
+      x: { t: "tb", h: ["", "Prompt", "Pseudocódigo", "Python"], r: [["Executa", "IA", "Ninguém", "Computador"], ["Linguagem", "Natural", "Estruturada", "Formal"], ["Você usa", "Sim", "Módulo 1", "Módulo 3"]] } },
+    { num: "3", label: "Circunstâncias", sc: "#D47F1A", title: "Por que aprender se a IA já escreve código?",
+      body: "A IA escreve código — mas quem dirige a IA precisa entender o resultado. Quem sabe ler código corrige a IA na hora. Quem não sabe fica preso em cada ajuste.",
+      x: { t: "n", e: "🤖", tx: "O papel do programador está mudando de 'quem escreve código' para 'quem sabe o que o código deve fazer'.", bg: "#EEF4FB", tc: "#0C3460" } },
+    { num: "4", label: "Relação", sc: "#3B8BD4", title: "Onde este módulo se encaixa",
+      body: "Este módulo estabelece que o raciocínio algorítmico já existe antes de qualquer linguagem.",
+      x: { t: "c", lang: "Mapa de conexões", code: "Módulo 0\n  ├── Alimenta:     Módulo 1 (lógica em pseudocódigo)\n  └── Prepara para: todos os outros módulos" } },
+    { num: "5", label: "Testemunho", sc: "#D4537E", title: "Quem já esteve no mesmo lugar",
+      body: "Sasha Laundy é designer e engenheira de software. Deu uma palestra na PyCon 2013 vinda do design, não da engenharia.",
+      x: { t: "q", q: "A coisa que mais me surpreendeu ao aprender a programar foi perceber o quanto do raciocínio eu já fazia. Só não tinha nome para ele.", a: "Sasha Laundy", r: "Designer → Engenheira · PyCon 2013" } },
+  ],
+  act: { type: "q", qs: [
+    { q: "Qual dessas sequências é um algoritmo válido?", o: ["Azul, cachorro, sete", "Acorde → escove os dentes → tome café → saia", "Feliz, janela, laranja", "Corra, pensar, bonito"], a: 1, ok: "Exato! Cada passo leva ao próximo em direção a um objetivo claro.", no: "Um algoritmo tem ordem e objetivo. Qual lista tem cada item levando ao próximo?" },
+    { q: "\"Legenda pro Instagram, tom descontraído, máx 3 linhas, emoji no final, sem hashtags.\" Quantas instruções distintas?", o: ["2", "3", "5", "7"], a: 2, ok: "Isso! As 5: tema, tom, limite, emoji, sem hashtags. Você já especifica parâmetros.", no: "Conte cada especificação: tema, tom, tamanho, o que adicionar, o que remover." },
+    { q: "Por que entender código é valioso mesmo que a IA escreva código para você?", o: ["Para impressionar", "A IA vai ser desativada", "Para dirigir a IA com precisão e corrigir erros", "Não é — a IA faz tudo melhor"], a: 2, ok: "Perfeito. Toda ferramenta funciona melhor nas mãos de quem entende o resultado.", no: "Quando a IA gera código errado, o que diferencia quem resolve de quem fica travado?" },
+    { q: "No Canva, você define posição, tamanho e cor de cada elemento. Isso é:", o: ["Arte pura — sem lógica", "Dar instruções precisas a um sistema", "Matemática avançada", "IA gerando arte"], a: 1, ok: "Exatamente. Cada ajuste no Canva é uma instrução para um sistema.", no: "Definir posição, tamanho e cor é emitir instruções para um sistema." },
+  ] },
+};
