@@ -9,11 +9,18 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     let cancelled = false;
-    supabase.auth.getSession().then(({ data }) => {
-      if (cancelled) return;
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (cancelled) return;
+        setUser(data.session?.user ?? null);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error("Supabase getSession falhou:", err);
+        setLoading(false);
+      });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
