@@ -148,22 +148,34 @@ Deno.serve(async (req: Request) => {
     parts: [{ text: m.content }],
   }));
 
-  let geminiResp: Response;
-  try {
-    geminiResp = await fetch(GEMINI_URL, {
-      method: "POST",
-      headers: {
-        "x-goog-api-key": apiKey,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: system }] },
-        contents,
-        generationConfig: { maxOutputTokens: MAX_TOKENS },
-      }),
-    });
-  } catch (e) {
-    return jsonResponse({ error: `Falha ao contatar o Gemini: ${String(e)}` }, 502);
+  // Retry em 503 (UNAVAILABLE) e 429 (rate limit) — picos no Gemini são transientes.
+  const RETRY_DELAYS_MS = [1000, 2500];
+  const requestBody = JSON.stringify({
+    system_instruction: { parts: [{ text: system }] },
+    contents,
+    generationConfig: { maxOutputTokens: MAX_TOKENS },
+  });
+
+  let geminiResp: Response | null = null;
+  for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+    try {
+      geminiResp = await fetch(GEMINI_URL, {
+        method: "POST",
+        headers: {
+          "x-goog-api-key": apiKey,
+          "content-type": "application/json",
+        },
+        body: requestBody,
+      });
+    } catch (e) {
+      return jsonResponse({ error: `Falha ao contatar o Gemini: ${String(e)}` }, 502);
+    }
+    const transient = geminiResp.status === 503 || geminiResp.status === 429;
+    if (!transient || attempt === RETRY_DELAYS_MS.length) break;
+    await new Promise((r) => setTimeout(r, RETRY_DELAYS_MS[attempt]));
+  }
+  if (!geminiResp) {
+    return jsonResponse({ error: "Falha inesperada ao chamar o Gemini." }, 502);
   }
 
   if (!geminiResp.ok) {
