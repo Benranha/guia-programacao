@@ -47,7 +47,7 @@ VITE_SUPABASE_ANON_KEY=...
 
 ## IA de dúvidas (opcional)
 
-Cada módulo termina com um chat "Pergunte à IA" focado **só no conteúdo do módulo**. A integração usa Claude Haiku 4.5 via uma Edge Function do Supabase — a chave da Anthropic nunca fica exposta no front.
+Cada módulo termina com um chat "Pergunte à IA" focado **só no conteúdo do módulo**. A integração usa Google Gemini 2.0 Flash via uma Edge Function do Supabase — a chave da API nunca fica exposta no front.
 
 ### Deploy da Edge Function
 
@@ -59,10 +59,10 @@ supabase login
 supabase link --project-ref your-project-ref
 ```
 
-3. Configure a chave da Anthropic como secret (não vai pro repositório):
+3. Configure a chave do Gemini como secret (não vai pro repositório). Pegue a chave em [aistudio.google.com/apikey](https://aistudio.google.com/apikey):
 
 ```bash
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+supabase secrets set GEMINI_API_KEY=AIza...
 ```
 
 4. Deploy:
