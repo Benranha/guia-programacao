@@ -1,12 +1,13 @@
-// Supabase Edge Function — proxy seguro para a API da Anthropic.
+// Supabase Edge Function — proxy seguro para a API do Google Gemini.
 // Mantém a chave fora do front e aplica system prompts focados por módulo.
 //
 // Deploy:
 //   supabase functions deploy ask-ai
-//   supabase secrets set ANTHROPIC_API_KEY=sk-ant-...
+//   supabase secrets set GEMINI_API_KEY=AIza...
 
-const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const MODEL = "claude-haiku-4-5-20251001";
+const MODEL = "gemini-2.0-flash";
+const GEMINI_URL =
+  `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 const MAX_TOKENS = 1024;
 
 const corsHeaders: Record<string, string> = {
@@ -104,10 +105,10 @@ Deno.serve(async (req: Request) => {
   }
 
   // @ts-ignore — Deno global
-  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+  const apiKey = Deno.env.get("GEMINI_API_KEY");
   if (!apiKey) {
     return jsonResponse(
-      { error: "ANTHROPIC_API_KEY não configurada na Edge Function." },
+      { error: "GEMINI_API_KEY não configurada na Edge Function." },
       500,
     );
   }
@@ -141,41 +142,46 @@ Deno.serve(async (req: Request) => {
 
   const system = systemFor(moduleId, moduleTitle);
 
-  let anthropicResp: Response;
+  // Gemini usa "model" no lugar de "assistant" e estrutura de partes.
+  const contents = cleanMessages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: m.content }],
+  }));
+
+  let geminiResp: Response;
   try {
-    anthropicResp = await fetch(ANTHROPIC_URL, {
+    geminiResp = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
+        "x-goog-api-key": apiKey,
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_TOKENS,
-        system,
-        messages: cleanMessages,
+        system_instruction: { parts: [{ text: system }] },
+        contents,
+        generationConfig: { maxOutputTokens: MAX_TOKENS },
       }),
     });
   } catch (e) {
-    return jsonResponse({ error: `Falha ao contatar a Anthropic: ${String(e)}` }, 502);
+    return jsonResponse({ error: `Falha ao contatar o Gemini: ${String(e)}` }, 502);
   }
 
-  if (!anthropicResp.ok) {
-    const errBody = await anthropicResp.text();
+  if (!geminiResp.ok) {
+    const errBody = await geminiResp.text();
     return jsonResponse(
-      { error: `Anthropic respondeu ${anthropicResp.status}: ${errBody}` },
-      anthropicResp.status,
+      { error: `Gemini respondeu ${geminiResp.status}: ${errBody}` },
+      geminiResp.status,
     );
   }
 
-  const data = await anthropicResp.json();
-  const text: string = Array.isArray(data?.content)
-    ? data.content
-      .filter((c: { type: string }) => c.type === "text")
-      .map((c: { text: string }) => c.text)
+  const data = await geminiResp.json();
+  const parts = data?.candidates?.[0]?.content?.parts;
+  const text: string = Array.isArray(parts)
+    ? parts
+      .filter((p: { text?: string }) => typeof p.text === "string")
+      .map((p: { text: string }) => p.text)
       .join("\n")
     : "";
 
-  return jsonResponse({ text, usage: data?.usage });
+  return jsonResponse({ text, usage: data?.usageMetadata });
 });
