@@ -3,6 +3,24 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 import { useAuth } from "../contexts/useAuth.js";
 import { T, sans, display } from "../lib/theme.js";
 
+function translateAuthError(err) {
+  const msg = (err?.message || "").toLowerCase();
+  const status = err?.status;
+  if (status === 429 || msg.includes("rate limit") || msg.includes("too many")) {
+    return "Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.";
+  }
+  if (msg.includes("invalid login") || msg.includes("invalid credentials")) {
+    return "Email ou senha incorretos.";
+  }
+  if (msg.includes("email not confirmed")) {
+    return "Confirme seu email antes de entrar.";
+  }
+  if (msg.includes("user already registered")) {
+    return "Este email já está cadastrado.";
+  }
+  return err?.message || "Erro ao processar a solicitação.";
+}
+
 export default function AuthPage({ onBack }) {
   const { signIn, signUp, resetPassword, isConfigured } = useAuth();
   const [mode, setMode] = useState("login");
@@ -31,7 +49,7 @@ export default function AuthPage({ onBack }) {
         setInfo("Enviamos um link de recuperação para seu email.");
       }
     } catch (err) {
-      setError(err.message || "Erro ao processar a solicitação.");
+      setError(translateAuthError(err));
     } finally {
       setBusy(false);
     }
