@@ -699,6 +699,13 @@ export default function App() {
     return () => { document.body.style.overflow = ""; };
   }, [drawerActive]);
 
+  useEffect(() => {
+    if (!drawerActive) return;
+    const onKey = (e) => { if (e.key === "Escape") setDrawerOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [drawerActive]);
+
   if (effectiveView === "login") return <AuthPage onBack={() => setView("guide")} />;
 
   const unlocked = (idx) => idx === 0 || completed.includes(MODS[idx - 1].id);
@@ -897,10 +904,20 @@ export default function App() {
     <div style={{ display: "flex", minHeight: "100vh", background: T.bg, fontFamily: sans }}>
       {sidebar}
       {isMobile && drawerOpen && (
-        <div
+        <button
+          type="button"
           onClick={() => setDrawerOpen(false)}
-          style={{ position: "fixed", inset: 0, background: T.overlay, zIndex: 55, backdropFilter: "blur(2px)" }}
-          aria-hidden="true"
+          aria-label="Fechar menu"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: T.overlay,
+            zIndex: 55,
+            backdropFilter: "blur(2px)",
+            border: "none",
+            padding: 0,
+            cursor: "pointer",
+          }}
         />
       )}
 
