@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/useAuth.js";
 import { T, sans, display } from "../lib/theme.js";
 
 export default function AuthPage({ onBack }) {
-  const { signIn, signUp, isConfigured } = useAuth();
+  const { signIn, signUp, resetPassword, isConfigured } = useAuth();
   const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,12 +20,15 @@ export default function AuthPage({ onBack }) {
     try {
       if (mode === "login") {
         await signIn(email, password);
-      } else {
+      } else if (mode === "signup") {
         const { user, session } = await signUp(email, password);
         if (user && !session) {
           setInfo("Conta criada! Verifique seu email para confirmar antes de entrar.");
           setPassword("");
         }
+      } else if (mode === "forgot") {
+        await resetPassword(email);
+        setInfo("Enviamos um link de recuperação para seu email.");
       }
     } catch (err) {
       setError(err.message || "Erro ao processar a solicitação.");
@@ -37,6 +40,13 @@ export default function AuthPage({ onBack }) {
   const switchMode = () => {
     setMode(mode === "login" ? "signup" : "login");
     setEmail("");
+    setPassword("");
+    setError("");
+    setInfo("");
+  };
+
+  const goToMode = (next) => {
+    setMode(next);
     setPassword("");
     setError("");
     setInfo("");
@@ -118,12 +128,18 @@ export default function AuthPage({ onBack }) {
                 letterSpacing: "-0.02em",
               }}
             >
-              {mode === "login" ? "Bem-vindo de volta" : "Criar sua conta"}
+              {mode === "login"
+                ? "Bem-vindo de volta"
+                : mode === "signup"
+                ? "Criar sua conta"
+                : "Recuperar senha"}
             </h2>
             <p style={{ fontSize: 14, color: T.textMuted, margin: 0, lineHeight: 1.55 }}>
               {mode === "login"
                 ? "Acesse para continuar de onde parou."
-                : "Salve seu progresso entre dispositivos."}
+                : mode === "signup"
+                ? "Salve seu progresso entre dispositivos."
+                : "Informe seu email e enviaremos um link para redefinir a senha."}
             </p>
           </div>
 
@@ -159,19 +175,42 @@ export default function AuthPage({ onBack }) {
               className="gp-input"
               style={{ marginBottom: "0.875rem" }}
             />
-            <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: T.text, marginBottom: 6 }}>
-              Senha
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              disabled={busy || !isConfigured}
-              className="gp-input"
-              style={{ marginBottom: "1rem" }}
-            />
+            {mode !== "forgot" && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    justifyContent: "space-between",
+                    marginBottom: 6,
+                  }}
+                >
+                  <label style={{ fontSize: 13, fontWeight: 500, color: T.text }}>
+                    Senha
+                  </label>
+                  {mode === "login" && (
+                    <button
+                      type="button"
+                      onClick={() => goToMode("forgot")}
+                      className="gp-link"
+                      style={{ fontSize: 12 }}
+                    >
+                      Esqueceu a senha?
+                    </button>
+                  )}
+                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  disabled={busy || !isConfigured}
+                  className="gp-input"
+                  style={{ marginBottom: "1rem" }}
+                />
+              </>
+            )}
 
             {error && (
               <div
@@ -210,15 +249,32 @@ export default function AuthPage({ onBack }) {
               className="gp-btn gp-btn-primary"
               style={{ width: "100%", padding: "13px", fontSize: 15, fontWeight: 600 }}
             >
-              {busy ? "Aguarde…" : mode === "login" ? "Entrar" : "Criar conta"}
+              {busy
+                ? "Aguarde…"
+                : mode === "login"
+                ? "Entrar"
+                : mode === "signup"
+                ? "Criar conta"
+                : "Enviar link"}
             </button>
           </form>
 
           <div style={{ textAlign: "center", marginTop: "1.25rem", fontSize: 13, color: T.textMuted }}>
-            {mode === "login" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
-            <button onClick={switchMode} className="gp-link" style={{ fontSize: 13 }}>
-              {mode === "login" ? "Criar conta" : "Entrar"}
-            </button>
+            {mode === "forgot" ? (
+              <>
+                Lembrou a senha?{" "}
+                <button onClick={() => goToMode("login")} className="gp-link" style={{ fontSize: 13 }}>
+                  Entrar
+                </button>
+              </>
+            ) : (
+              <>
+                {mode === "login" ? "Ainda não tem conta?" : "Já tem conta?"}{" "}
+                <button onClick={switchMode} className="gp-link" style={{ fontSize: 13 }}>
+                  {mode === "login" ? "Criar conta" : "Entrar"}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
