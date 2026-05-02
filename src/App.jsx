@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Clock, CheckCircle, XCircle, ArrowRight, RotateCcw, ChevronRight, ChevronLeft, Circle } from "lucide-react";
+import { useProgress } from "./contexts/useProgress.js";
+import UserMenu from "./components/UserMenu.jsx";
+import AnonBanner from "./components/AnonBanner.jsx";
 
 const C={
   cream:"#F8F6F0",white:"#FFF",ink:"#1C1B18",
@@ -429,10 +432,10 @@ steps:[
 // ── app shell ─────────────────────────────────────────────────────────────────
 export default function App(){
   const [activeId,setActiveId]=useState(MODS[0].id);
-  const [completed,setCompleted]=useState([]);
+  const {completed,markComplete}=useProgress();
   const unlocked=idx=>idx===0||completed.includes(MODS[idx-1].id);
   const done=id=>completed.includes(id);
-  const mark=id=>{if(!done(id))setCompleted(p=>[...p,id]);};
+  const mark=id=>{markComplete(id);};
   const activeIdx=MODS.findIndex(m=>m.id===activeId);
   const active=MODS[activeIdx];
   const hasNext=activeIdx<MODS.length-1&&unlocked(activeIdx+1);
@@ -469,10 +472,12 @@ export default function App(){
             </button>
           ))}
         </nav>
+        <UserMenu/>
         <div style={{padding:"0.875rem 1.25rem",borderTop:`1px solid ${C.border}`,fontSize:11,color:C.muted,fontFamily:sans}}>Atualizado com contexto IA 2024+</div>
       </aside>
       {/* main */}
       <main style={{flex:1,minWidth:0,display:"flex",flexDirection:"column"}}>
+        <AnonBanner/>
         <header style={{display:"flex",alignItems:"center",gap:12,padding:"0.875rem 1.25rem",background:C.white,borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,zIndex:30}}>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:10,fontWeight:700,color:active.color,letterSpacing:"0.08em",textTransform:"uppercase",fontFamily:sans}}>{active.badge}</div>
