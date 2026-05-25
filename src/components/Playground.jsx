@@ -59,11 +59,14 @@ try { ${js} } catch (e) { document.body.insertAdjacentHTML('beforeend', '<pre st
 
 export default function Playground() {
   const { user } = useAuth();
-  const allowedEmail = import.meta.env.VITE_PLAYGROUND_USER_EMAIL;
+  const allowedEmails = (import.meta.env.VITE_PLAYGROUND_USER_EMAIL || "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
   const authorized =
     !!user?.email &&
-    !!allowedEmail &&
-    user.email.trim().toLowerCase() === allowedEmail.trim().toLowerCase();
+    allowedEmails.length > 0 &&
+    allowedEmails.includes(user.email.trim().toLowerCase());
 
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState(loadCode);
