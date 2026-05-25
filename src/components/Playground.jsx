@@ -59,11 +59,6 @@ try { ${js} } catch (e) { document.body.insertAdjacentHTML('beforeend', '<pre st
 
 export default function Playground() {
   const { user } = useAuth();
-  const allowedEmail = import.meta.env.VITE_PLAYGROUND_USER_EMAIL;
-  const authorized =
-    !!user?.email &&
-    !!allowedEmail &&
-    user.email.trim().toLowerCase() === allowedEmail.trim().toLowerCase();
 
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState(loadCode);
@@ -105,7 +100,7 @@ export default function Playground() {
 
   const runNow = () => setPreview(buildSrcDoc(code));
 
-  if (!authorized) return null;
+  if (!user) return null;
 
   return (
     <>
@@ -149,11 +144,11 @@ export default function Playground() {
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                 <Sparkles size={13} color={T.accent} />
                 <span style={{ fontSize: 11, fontWeight: 700, color: T.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                  Exclusivo para você
+                  Novo recurso
                 </span>
               </div>
               <div style={{ fontSize: 13, lineHeight: 1.5, color: T.text, paddingRight: 18 }}>
-                Um playground só seu pra testar HTML, CSS e JS — preview ao vivo.
+                Um playground pra testar HTML, CSS e JS — preview ao vivo.
               </div>
               <span
                 style={{
