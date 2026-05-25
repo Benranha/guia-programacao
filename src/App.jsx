@@ -203,6 +203,48 @@ function Xtra({ x, ac, mob }) {
   if (x.t === "c") return <Code lang={x.lang} code={x.code} mob={mob} />;
   if (x.t === "tb") return <Table h={x.h} r={x.r} ac={x.ac || ac} mob={mob} />;
   if (x.t === "q") return <Quote q={x.q} a={x.a} r={x.r} ac={x.ac || ac} mob={mob} />;
+  if (x.t === "flow") return (
+    <div style={{
+      display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center",
+      margin: "16px 0", padding: "18px", background: T.bg,
+      border: `1px solid ${T.border}`, borderRadius: 12,
+    }}>
+      {x.steps.map((s, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{
+            display: "flex", flexDirection: "column", alignItems: "center",
+            gap: 6, minWidth: 80, textAlign: "center",
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 12, background: T.surface,
+              border: `1px solid ${T.border}`, display: "flex", alignItems: "center",
+              justifyContent: "center", fontSize: 20,
+            }}>{s.icon}</div>
+            <span style={{ fontSize: 11, color: T.textMuted, lineHeight: 1.3, fontFamily: sans }}>{s.label}</span>
+          </div>
+          {i < x.steps.length - 1 && (
+            <span style={{ color: ac, fontSize: 18, marginBottom: 16, flexShrink: 0 }}>→</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+  if (x.t === "step") return (
+    <div style={{
+      display: "flex", gap: 14, margin: "14px 0", padding: "14px 18px",
+      background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12,
+    }}>
+      <div style={{
+        width: 26, height: 26, borderRadius: "50%", background: ac,
+        color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 12, fontWeight: 700, flexShrink: 0, marginTop: 2, fontFamily: sans,
+      }}>{x.number}</div>
+      <div>
+        <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 600, color: T.text, fontFamily: sans }}>{x.title}</p>
+        <p style={{ margin: 0, fontSize: 13, color: T.textSubtle, lineHeight: 1.6, fontFamily: sans }}>{x.text}</p>
+      </div>
+    </div>
+  );
   return null;
 }
 
