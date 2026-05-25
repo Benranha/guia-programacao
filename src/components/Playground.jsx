@@ -41,6 +41,10 @@ function loadCode() {
   }
 }
 
+function escapeScript(str) {
+  return str.replace(/<\/script/gi, "<\\/script");
+}
+
 function buildSrcDoc({ html, css, js }) {
   return `<!doctype html>
 <html>
@@ -51,7 +55,7 @@ function buildSrcDoc({ html, css, js }) {
 <body>
 ${html}
 <script>
-try { ${js} } catch (e) { document.body.insertAdjacentHTML('beforeend', '<pre style="color:#c00;background:#fee;padding:8px;border-radius:6px;margin-top:1rem;font-family:monospace;font-size:12px">'+ e.message +'</pre>'); }
+try { ${escapeScript(js)} } catch (e) { document.body.insertAdjacentHTML('beforeend', '<pre style="color:#c00;background:#fee;padding:8px;border-radius:6px;margin-top:1rem;font-family:monospace;font-size:12px">'+ e.message +'</pre>'); }
 </script>
 </body>
 </html>`;
@@ -113,7 +117,7 @@ export default function Playground() {
   return (
     <>
       {!open && (
-        <div style={{ position: "fixed", right: 20, bottom: 20, zIndex: 50, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 10 }}>
+        <div style={{ position: "fixed", right: 24, bottom: 24, zIndex: 9990, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
           {!hintDismissed && (
             <div
               className="gp-pop"
@@ -176,19 +180,20 @@ export default function Playground() {
           <button
             onClick={openPlayground}
             aria-label="Abrir playground"
-            className="gp-btn gp-btn-primary"
+            className="gp-btn gp-btn-primary gp-fab-pulse"
             style={{
-              width: 56,
-              height: 56,
+              width: 64,
+              height: 64,
               borderRadius: "50%",
               padding: 0,
-              boxShadow: T.shadowLg,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.22), 0 1px 6px rgba(0,0,0,0.14)",
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
+              fontSize: 0,
             }}
           >
-            <Code2 size={22} />
+            <Code2 size={28} />
           </button>
         </div>
       )}

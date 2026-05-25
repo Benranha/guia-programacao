@@ -309,6 +309,14 @@ a:focus-visible {
 .gp-fade-in { animation: gp-fade-in var(--duration) var(--ease); }
 .gp-pop { animation: gp-pop 360ms var(--ease); }
 
+@keyframes gp-fab-ring {
+  0%   { box-shadow: 0 4px 24px rgba(0,0,0,0.22), 0 0 0 0 var(--accent-ring); }
+  60%  { box-shadow: 0 4px 24px rgba(0,0,0,0.22), 0 0 0 12px transparent; }
+  100% { box-shadow: 0 4px 24px rgba(0,0,0,0.22), 0 0 0 0 transparent; }
+}
+.gp-fab-pulse { animation: gp-fab-ring 2s ease-out infinite; }
+.gp-fab-pulse:hover { animation: none; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
